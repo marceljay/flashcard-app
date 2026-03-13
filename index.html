@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcards</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1a1a2e;
+      color: #fff;
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 { font-size: 1.5rem; font-weight: 600; }
+
+    .header-actions { display: flex; gap: 0.5rem; }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-primary { background: #6c63ff; color: #fff; }
+    .btn-primary:hover { background: #5a52d5; }
+
+    .btn-secondary { background: #e0e0e0; color: #333; }
+    .btn-secondary:hover { background: #d0d0d0; }
+
+    .btn-danger { background: #ff6b6b; color: #fff; }
+    .btn-danger:hover { background: #e55a5a; }
+
+    .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.1); }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 90%;
+      max-width: 500px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal h2 { margin-bottom: 1.5rem; font-size: 1.25rem; }
+
+    .form-group { margin-bottom: 1.25rem; }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.375rem;
+      color: #555;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.625rem 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.9375rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #6c63ff;
+      box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+    }
+
+    .form-group textarea { resize: vertical; min-height: 80px; }
+
+    .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; }
+
+    /* Deck view */
+    .container { max-width: 960px; margin: 0 auto; padding: 2rem; }
+
+    .deck-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .deck-header h2 { font-size: 1.125rem; color: #555; }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #999;
+    }
+
+    .empty-state p { font-size: 1.125rem; margin-bottom: 1rem; }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .card-item {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+      position: relative;
+    }
+
+    .card-item:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+      transform: translateY(-2px);
+    }
+
+    .card-item .card-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #999;
+      margin-bottom: 0.375rem;
+    }
+
+    .card-item .card-front {
+      font-size: 1rem;
+      font-weight: 500;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .card-item .card-back {
+      font-size: 0.875rem;
+      color: #666;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid #eee;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .card-item .card-actions {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      display: flex;
+      gap: 0.25rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .card-item:hover .card-actions { opacity: 1; }
+
+    .card-actions button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.25rem;
+      border-radius: 4px;
+      line-height: 1;
+    }
+
+    .card-actions button:hover { background: #f0f0f0; }
+
+    /* Study mode */
+    .study-view { display: none; }
+    .study-view.active { display: block; }
+    .deck-view.hidden { display: none; }
+
+    .study-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .study-progress {
+      font-size: 0.875rem;
+      color: #888;
+      margin-bottom: 1.5rem;
+      align-self: stretch;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .progress-bar {
+      flex: 1;
+      height: 4px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      margin-left: 1rem;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #6c63ff;
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+
+    .flashcard {
+      width: 100%;
+      min-height: 300px;
+      perspective: 1000px;
+      cursor: pointer;
+      margin-bottom: 2rem;
+    }
+
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      min-height: 300px;
+      transition: transform 0.5s;
+      transform-style: preserve-3d;
+    }
+
+    .flashcard.flipped .flashcard-inner {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 2.5rem;
+      text-align: center;
+    }
+
+    .flashcard-face .face-label {
+      position: absolute;
+      top: 1.25rem;
+      left: 1.25rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #bbb;
+    }
+
+    .flashcard-front { font-size: 1.375rem; font-weight: 600; line-height: 1.4; }
+    .flashcard-back {
+      transform: rotateY(180deg);
+      font-size: 1.125rem;
+      color: #444;
+      line-height: 1.5;
+    }
+
+    .flashcard-hint {
+      font-size: 0.8rem;
+      color: #bbb;
+      margin-top: 1rem;
+    }
+
+    .study-controls {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .study-controls .btn { padding: 0.625rem 1.5rem; font-size: 1rem; }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header { padding: 1rem; }
+      header h1 { font-size: 1.25rem; }
+      .container { padding: 1rem; }
+      .card-grid { grid-template-columns: 1fr; }
+      .study-container { padding: 1rem; }
+      .flashcard-front { font-size: 1.125rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Flashcards</h1>
+  <div class="header-actions">
+    <button class="btn btn-ghost" id="studyBtn" disabled>Study</button>
+    <button class="btn btn-primary" id="addBtn">+ New Card</button>
+  </div>
+</header>
+
+<!-- Deck View -->
+<div class="deck-view" id="deckView">
+  <div class="container">
+    <div class="deck-header">
+      <h2 id="cardCount">0 cards</h2>
+      <button class="btn btn-danger" id="clearAllBtn" style="display:none">Delete All</button>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      <p>No flashcards yet</p>
+      <button class="btn btn-primary" id="addBtnEmpty">+ Create your first card</button>
+    </div>
+
+    <div class="card-grid" id="cardGrid"></div>
+  </div>
+</div>
+
+<!-- Study View -->
+<div class="study-view" id="studyView">
+  <div class="study-container">
+    <div class="study-progress">
+      <span id="studyCounter">1 / 10</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <div class="flashcard" id="flashcard">
+      <div class="flashcard-inner">
+        <div class="flashcard-face flashcard-front">
+          <span class="face-label">Question</span>
+          <div id="studyFront"></div>
+          <div class="flashcard-hint">Click to reveal answer</div>
+        </div>
+        <div class="flashcard-face flashcard-back">
+          <span class="face-label">Answer</span>
+          <div id="studyBack"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="study-controls">
+      <button class="btn btn-secondary" id="prevBtn">Previous</button>
+      <button class="btn btn-secondary" id="shuffleBtn">Shuffle</button>
+      <button class="btn btn-primary" id="nextBtn">Next</button>
+    </div>
+    <br>
+    <button class="btn btn-secondary" id="exitStudyBtn">Exit Study Mode</button>
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <h2 id="modalTitle">New Flashcard</h2>
+    <div class="form-group">
+      <label for="frontInput">Front (Question)</label>
+      <textarea id="frontInput" placeholder="Enter the question or term..."></textarea>
+    </div>
+    <div class="form-group">
+      <label for="backInput">Back (Answer)</label>
+      <textarea id="backInput" placeholder="Enter the answer or definition..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+      <button class="btn btn-primary" id="saveBtn">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'flashcards';
+
+  function loadCards() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    } catch {
+      return [];
+    }
+  }
+
+  function saveCards(cards) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cards));
+  }
+
+  let cards = loadCards();
+  let editingId = null;
+  let studyOrder = [];
+  let studyIndex = 0;
+
+  // DOM elements
+  const modal = document.getElementById('modal');
+  const frontInput = document.getElementById('frontInput');
+  const backInput = document.getElementById('backInput');
+  const modalTitle = document.getElementById('modalTitle');
+  const cardGrid = document.getElementById('cardGrid');
+  const cardCount = document.getElementById('cardCount');
+  const emptyState = document.getElementById('emptyState');
+  const clearAllBtn = document.getElementById('clearAllBtn');
+  const studyBtn = document.getElementById('studyBtn');
+  const deckView = document.getElementById('deckView');
+  const studyView = document.getElementById('studyView');
+  const flashcard = document.getElementById('flashcard');
+  const studyFront = document.getElementById('studyFront');
+  const studyBack = document.getElementById('studyBack');
+  const studyCounter = document.getElementById('studyCounter');
+  const progressFill = document.getElementById('progressFill');
+
+  function render() {
+    const count = cards.length;
+    cardCount.textContent = `${count} card${count !== 1 ? 's' : ''}`;
+    emptyState.style.display = count === 0 ? 'block' : 'none';
+    clearAllBtn.style.display = count > 0 ? 'inline-block' : 'none';
+    studyBtn.disabled = count === 0;
+
+    cardGrid.innerHTML = '';
+    cards.forEach(card => {
+      const el = document.createElement('div');
+      el.className = 'card-item';
+      el.innerHTML = `
+        <div class="card-actions">
+          <button onclick="event.stopPropagation(); editCard('${card.id}')" title="Edit">&#9998;</button>
+          <button onclick="event.stopPropagation(); deleteCard('${card.id}')" title="Delete">&#10005;</button>
+        </div>
+        <div class="card-label">Front</div>
+        <div class="card-front">${escapeHtml(card.front)}</div>
+        <div class="card-label" style="margin-top:0.75rem">Back</div>
+        <div class="card-back">${escapeHtml(card.back)}</div>
+      `;
+      cardGrid.appendChild(el);
+    });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  function openModal(card) {
+    if (card) {
+      editingId = card.id;
+      modalTitle.textContent = 'Edit Flashcard';
+      frontInput.value = card.front;
+      backInput.value = card.back;
+    } else {
+      editingId = null;
+      modalTitle.textContent = 'New Flashcard';
+      frontInput.value = '';
+      backInput.value = '';
+    }
+    modal.classList.add('active');
+    frontInput.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove('active');
+    editingId = null;
+  }
+
+  function saveCard() {
+    const front = frontInput.value.trim();
+    const back = backInput.value.trim();
+    if (!front || !back) return;
+
+    if (editingId) {
+      const card = cards.find(c => c.id === editingId);
+      if (card) {
+        card.front = front;
+        card.back = back;
+      }
+    } else {
+      cards.push({ id: crypto.randomUUID(), front, back });
+    }
+
+    saveCards(cards);
+    closeModal();
+    render();
+  }
+
+  window.editCard = function(id) {
+    const card = cards.find(c => c.id === id);
+    if (card) openModal(card);
+  };
+
+  window.deleteCard = function(id) {
+    if (!confirm('Delete this flashcard?')) return;
+    cards = cards.filter(c => c.id !== id);
+    saveCards(cards);
+    render();
+  };
+
+  // Study mode
+  function enterStudy() {
+    if (cards.length === 0) return;
+    studyOrder = cards.map((_, i) => i);
+    studyIndex = 0;
+    flashcard.classList.remove('flipped');
+    deckView.classList.add('hidden');
+    studyView.classList.add('active');
+    renderStudyCard();
+  }
+
+  function exitStudy() {
+    studyView.classList.remove('active');
+    deckView.classList.remove('hidden');
+  }
+
+  function renderStudyCard() {
+    const card = cards[studyOrder[studyIndex]];
+    studyFront.textContent = card.front;
+    studyBack.textContent = card.back;
+    flashcard.classList.remove('flipped');
+    studyCounter.textContent = `${studyIndex + 1} / ${studyOrder.length}`;
+    progressFill.style.width = `${((studyIndex + 1) / studyOrder.length) * 100}%`;
+  }
+
+  function shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  // Event listeners
+  document.getElementById('addBtn').addEventListener('click', () => openModal());
+  document.getElementById('addBtnEmpty').addEventListener('click', () => openModal());
+  document.getElementById('cancelBtn').addEventListener('click', closeModal);
+  document.getElementById('saveBtn').addEventListener('click', saveCard);
+  studyBtn.addEventListener('click', enterStudy);
+  document.getElementById('exitStudyBtn').addEventListener('click', exitStudy);
+
+  flashcard.addEventListener('click', () => flashcard.classList.toggle('flipped'));
+
+  document.getElementById('prevBtn').addEventListener('click', () => {
+    if (studyIndex > 0) { studyIndex--; renderStudyCard(); }
+  });
+
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (studyIndex < studyOrder.length - 1) { studyIndex++; renderStudyCard(); }
+  });
+
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    shuffleArray(studyOrder);
+    studyIndex = 0;
+    renderStudyCard();
+  });
+
+  clearAllBtn.addEventListener('click', () => {
+    if (!confirm('Delete all flashcards? This cannot be undone.')) return;
+    cards = [];
+    saveCards(cards);
+    render();
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      if (modal.classList.contains('active')) closeModal();
+      else if (studyView.classList.contains('active')) exitStudy();
+    }
+    if (studyView.classList.contains('active') && !modal.classList.contains('active')) {
+      if (e.key === ' ') { e.preventDefault(); flashcard.classList.toggle('flipped'); }
+      if (e.key === 'ArrowLeft' && studyIndex > 0) { studyIndex--; renderStudyCard(); }
+      if (e.key === 'ArrowRight' && studyIndex < studyOrder.length - 1) { studyIndex++; renderStudyCard(); }
+    }
+  });
+
+  render();
+</script>
+
+</body>
+</html>
