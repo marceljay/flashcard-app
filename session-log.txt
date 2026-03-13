@@ -1,0 +1,110 @@
+Session Log - Flashcard App Development
+========================================
+
+1. ls /Users/mav/dev/Claude/Test-Project1/
+   - Checked project directory (empty)
+
+2. Write: /Users/mav/dev/Claude/Test-Project1/index.html
+   - Created initial flashcard app (single-file HTML/CSS/JS)
+
+3. mkdir -p /Users/mav/dev/Claude/Test-Project1/.claude
+
+4. Write: /Users/mav/dev/Claude/Test-Project1/.claude/launch.json
+   - Created preview server config (python3 http.server on port 8080)
+
+5. preview_start: "flashcards"
+   - Started local dev server on port 8080
+
+6. preview_screenshot
+   - Verified initial empty state render
+
+7. preview_click: #addBtnEmpty
+   - Opened "New Flashcard" modal
+
+8. preview_screenshot
+   - Verified modal appeared correctly
+
+9. preview_fill: #frontInput -> "What is the capital of France?"
+10. preview_fill: #backInput -> "Paris"
+11. preview_click: #saveBtn
+    - Saved test flashcard
+
+12. preview_screenshot
+    - Observed study mode appeared (click-through issue)
+
+13. preview_click: #exitStudyBtn
+    - Exited study mode
+
+14. preview_screenshot
+    - Verified deck view with 1 card displayed correctly
+
+15. Read: /Users/mav/dev/Claude/Test-Project1/index.html
+    - Read full file before improvement rewrite
+
+16. Write: /Users/mav/dev/Claude/Test-Project1/index.html
+    - Rewrote with improvements: search, tags, confidence ratings,
+      results screen, import/export, polished UI
+
+17. Edit: /Users/mav/dev/Claude/Test-Project1/index.html
+    - Fixed search icon (unicode escape -> CSS circle+line)
+
+18. preview_eval: location.reload()
+    - Reloaded page to pick up changes
+
+19. preview_screenshot
+    - Verified new deck view with search bar and migrated cards
+
+20. preview_click: #studyBtn
+    - Entered study mode
+
+21. preview_screenshot
+    - Verified study mode card display (1/2, question side)
+
+22. preview_click: #flashcard
+    - Flipped card to answer side
+
+23. preview_screenshot
+    - Verified flip animation and confidence buttons appeared
+
+24. preview_click: #knowItBtn
+    - Rated card 1 as "Know It"
+
+25. preview_screenshot
+    - Verified advance to card 2/2 with "1 known" score
+
+26. preview_click: #flashcard
+    - Flipped card 2
+
+27. preview_click: #needPracticeBtn
+    - Rated card 2 as "Still Learning" (click-through restarted study)
+
+28. preview_screenshot
+    - Observed study restarted due to preview click overlap
+
+29. preview_click: #exitStudyBtn
+    - Exited study mode
+
+30. preview_click: #studyBtn
+    - Re-entered study mode for clean test
+
+31. preview_eval: document.getElementById('flashcard').click()
+    - Flipped card 1 via JS
+
+32. preview_eval: document.getElementById('knowItBtn').click()
+    - Rated card 1 "Know It" via JS
+
+33. preview_eval: document.getElementById('flashcard').click()
+    - Flipped card 2 via JS
+
+34. preview_eval: document.getElementById('needPracticeBtn').click()
+    - Rated card 2 "Still Learning" via JS
+
+35. preview_screenshot
+    - Verified results screen: "Session Complete", 1 Know It, 1 Still Learning,
+      Back to Deck / Study Again / Retry Missed buttons
+
+36. preview_click: #resToDeck
+    - Returned to deck view
+
+37. preview_screenshot
+    - Verified deck view restored correctly with all cards
