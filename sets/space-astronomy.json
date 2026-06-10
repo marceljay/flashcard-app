@@ -1,0 +1,17 @@
+[
+  {"front": "What is the closest star to Earth besides the Sun?", "back": "Proxima Centauri, about 4.24 light-years away.", "tag": "Space"},
+  {"front": "How old is the universe?", "back": "About 13.8 billion years, based on measurements of the cosmic microwave background.", "tag": "Space"},
+  {"front": "What is a light-year?", "back": "The distance light travels in one year: about 9.46 trillion km (5.88 trillion miles).", "tag": "Space"},
+  {"front": "What is the largest planet in our solar system?", "back": "Jupiter. Its Great Red Spot storm alone is larger than Earth.", "tag": "Space"},
+  {"front": "What causes a solar eclipse?", "back": "The Moon passes between Earth and the Sun, blocking sunlight from reaching parts of Earth's surface.", "tag": "Space"},
+  {"front": "What is the name of the galaxy we live in?", "back": "The Milky Way. It contains an estimated 100–400 billion stars.", "tag": "Space"},
+  {"front": "What is a black hole?", "back": "A region of spacetime where gravity is so strong that nothing — not even light — can escape past the event horizon.", "tag": "Space"},
+  {"front": "What is the Great Red Spot on Jupiter?", "back": "A giant anticyclonic storm that has persisted for at least 350 years. It is slowly shrinking.", "tag": "Space"},
+  {"front": "How many planets are in our solar system?", "back": "8: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune. (Pluto was reclassified as a dwarf planet in 2006.)", "tag": "Space"},
+  {"front": "What is the Sun primarily made of?", "back": "About 73% hydrogen and 25% helium. Nuclear fusion converts hydrogen into helium, releasing enormous energy.", "tag": "Space"},
+  {"front": "What is the smallest planet in our solar system?", "back": "Mercury, with a radius of about 2,440 km.", "tag": "Space"},
+  {"front": "How long does it take Earth to orbit the Sun?", "back": "365.25 days — that extra quarter day is why we have a leap year every four years.", "tag": "Space"},
+  {"front": "What is a supernova?", "back": "An extremely powerful explosion marking the death of a massive star. It can briefly outshine an entire galaxy.", "tag": "Space"},
+  {"front": "What is the International Space Station (ISS)?", "back": "A habitable satellite in low Earth orbit (~400 km up), continuously crewed since November 2000.", "tag": "Space"},
+  {"front": "What is dark matter?", "back": "An undetected form of matter making up ~27% of the universe. It does not interact with light but exerts gravitational effects.", "tag": "Space"}
+]

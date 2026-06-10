@@ -1,0 +1,17 @@
+[
+  {"front": "What percentage of the human body is water?", "back": "About 60% — the brain and heart are closer to 73% water.", "tag": "Fun Facts"},
+  {"front": "How many hearts does an octopus have?", "back": "Three — two pump blood to the gills, one to the rest of the body.", "tag": "Fun Facts"},
+  {"front": "What is the longest river in the world?", "back": "The Nile at 6,650 km (4,130 miles), though some argue the Amazon is longer depending on the source.", "tag": "Fun Facts"},
+  {"front": "How fast does light travel in a vacuum?", "back": "299,792 km/s (about 186,282 miles per second).", "tag": "Fun Facts"},
+  {"front": "What is the smallest country in the world by area?", "back": "Vatican City, at just 0.44 km² (110 acres).", "tag": "Fun Facts"},
+  {"front": "How many bones does an adult human have?", "back": "206. Babies are born with around 270 — many fuse together as we grow.", "tag": "Fun Facts"},
+  {"front": "What is the hardest natural substance on Earth?", "back": "Diamond (score 10 on the Mohs hardness scale).", "tag": "Fun Facts"},
+  {"front": "Which planet has the most moons?", "back": "Saturn, with 146 confirmed moons as of 2024.", "tag": "Fun Facts"},
+  {"front": "What is a group of flamingos called?", "back": "A flamboyance. (A group of crows is called a murder.)", "tag": "Fun Facts"},
+  {"front": "How long does it take sunlight to reach Earth?", "back": "About 8 minutes and 20 seconds, travelling 150 million km.", "tag": "Fun Facts"},
+  {"front": "What is the most abundant gas in Earth's atmosphere?", "back": "Nitrogen, at about 78%. Oxygen makes up about 21%.", "tag": "Fun Facts"},
+  {"front": "How many colours are in a rainbow?", "back": "7 — red, orange, yellow, green, blue, indigo, violet (ROY G BIV).", "tag": "Fun Facts"},
+  {"front": "What is the largest organ in the human body?", "back": "The skin. In an adult it covers about 1.7–2 m² and weighs 3–4 kg.", "tag": "Fun Facts"},
+  {"front": "At what temperature does water boil at sea level?", "back": "100°C (212°F). Higher altitude means lower pressure, so water boils at a lower temperature.", "tag": "Fun Facts"},
+  {"front": "Which animal has the highest blood pressure?", "back": "The giraffe — its heart must pump blood up a very long neck, reaching ~280/180 mmHg.", "tag": "Fun Facts"}
+]

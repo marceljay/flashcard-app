@@ -1,0 +1,22 @@
+[
+  {"front": "What is the capital of France?", "back": "Paris", "tag": "Geography"},
+  {"front": "What is the capital of Japan?", "back": "Tokyo", "tag": "Geography"},
+  {"front": "What is the capital of Brazil?", "back": "Brasília (not São Paulo or Rio de Janeiro)", "tag": "Geography"},
+  {"front": "What is the capital of Australia?", "back": "Canberra (not Sydney)", "tag": "Geography"},
+  {"front": "What is the capital of Canada?", "back": "Ottawa (not Toronto or Vancouver)", "tag": "Geography"},
+  {"front": "What is the capital of Egypt?", "back": "Cairo", "tag": "Geography"},
+  {"front": "What is the capital of Argentina?", "back": "Buenos Aires", "tag": "Geography"},
+  {"front": "What is the capital of South Korea?", "back": "Seoul", "tag": "Geography"},
+  {"front": "What is the capital of Russia?", "back": "Moscow", "tag": "Geography"},
+  {"front": "What is the capital of India?", "back": "New Delhi (part of the National Capital Territory of Delhi)", "tag": "Geography"},
+  {"front": "What is the capital of China?", "back": "Beijing", "tag": "Geography"},
+  {"front": "What is the capital of Nigeria?", "back": "Abuja (moved from Lagos in 1991)", "tag": "Geography"},
+  {"front": "What is the capital of Germany?", "back": "Berlin", "tag": "Geography"},
+  {"front": "What is the capital of Mexico?", "back": "Mexico City", "tag": "Geography"},
+  {"front": "What is the capital of Kenya?", "back": "Nairobi", "tag": "Geography"},
+  {"front": "What is the capital of Norway?", "back": "Oslo", "tag": "Geography"},
+  {"front": "What is the capital of New Zealand?", "back": "Wellington (not Auckland)", "tag": "Geography"},
+  {"front": "What is the capital of Turkey?", "back": "Ankara (not Istanbul)", "tag": "Geography"},
+  {"front": "What is the capital of South Africa?", "back": "Three capitals: Pretoria (executive), Cape Town (legislative), Bloemfontein (judicial)", "tag": "Geography"},
+  {"front": "What is the capital of Thailand?", "back": "Bangkok (official ceremonial name: Krung Thep Maha Nakhon)", "tag": "Geography"}
+]
