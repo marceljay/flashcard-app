@@ -21,6 +21,7 @@
       --primary-ring: rgba(108,99,255,0.15);
       --danger: #ff6b6b;
       --danger-hover: #e55a5a;
+      --danger-ring: rgba(255,107,107,0.15);
       --success: #4ecdc4;
       --success-hover: #3dbdb5;
       --warning: #ffa726;
@@ -34,6 +35,26 @@
       --radius-xl: 16px;
     }
 
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1117;
+        --surface: #1a1d27;
+        --text: #e8eaf0;
+        --text-secondary: #9aa0b4;
+        --text-muted: #6b7280;
+        --border: #2d3148;
+        --border-light: #252840;
+        --header-bg: #111320;
+        --primary-bg: rgba(108,99,255,0.15);
+        --primary-ring: rgba(108,99,255,0.2);
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.35);
+        --shadow-md: 0 4px 16px rgba(0,0,0,0.45);
+        --shadow-lg: 0 8px 32px rgba(0,0,0,0.45);
+        --shadow-xl: 0 20px 60px rgba(0,0,0,0.65);
+      }
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
       background: var(--bg);
@@ -45,21 +66,24 @@
     header {
       background: var(--header-bg);
       color: #fff;
-      padding: 1rem 2rem;
+      padding: 0.875rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
       z-index: 50;
+      gap: 0.75rem;
     }
 
     header h1 {
-      font-size: 1.25rem;
+      font-size: 1.125rem;
       font-weight: 600;
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     header h1 .logo {
@@ -71,9 +95,12 @@
       align-items: center;
       justify-content: center;
       font-size: 0.75rem;
+      flex-shrink: 0;
     }
 
-    .header-actions { display: flex; gap: 0.5rem; align-items: center; }
+    .header-actions { display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0; }
+
+    .btn-icon-sym { display: none; }
 
     /* Buttons */
     .btn {
@@ -86,8 +113,10 @@
       transition: all 0.15s;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.375rem;
       white-space: nowrap;
+      min-height: 38px;
     }
 
     .btn:active { transform: scale(0.97); }
@@ -97,8 +126,13 @@
     .btn-primary { background: var(--primary); color: #fff; }
     .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
 
-    .btn-secondary { background: var(--border); color: #333; }
+    .btn-secondary { background: var(--border); color: var(--text); }
     .btn-secondary:hover:not(:disabled) { background: #d0d0d0; }
+
+    @media (prefers-color-scheme: dark) {
+      .btn-secondary { background: #2d3148; }
+      .btn-secondary:hover:not(:disabled) { background: #363b57; }
+    }
 
     .btn-danger { background: var(--danger); color: #fff; }
     .btn-danger:hover:not(:disabled) { background: var(--danger-hover); }
@@ -112,7 +146,7 @@
     .btn-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
     .btn-outline:hover:not(:disabled) { background: var(--bg); }
 
-    .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; }
+    .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.75rem; min-height: 34px; }
     .btn-icon { padding: 0.375rem; font-size: 1rem; line-height: 1; }
 
     /* Modal */
@@ -125,6 +159,7 @@
       z-index: 100;
       justify-content: center;
       align-items: center;
+      padding: 1rem;
       animation: fadeIn 0.15s;
     }
 
@@ -134,7 +169,7 @@
       background: var(--surface);
       border-radius: var(--radius-lg);
       padding: 1.75rem;
-      width: 90%;
+      width: 100%;
       max-width: 500px;
       box-shadow: var(--shadow-xl);
       animation: slideUp 0.2s;
@@ -161,7 +196,7 @@
       border-radius: var(--radius);
       font-size: 0.875rem;
       font-family: inherit;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
       background: var(--surface);
       color: var(--text);
     }
@@ -176,7 +211,60 @@
 
     .form-group textarea { resize: vertical; min-height: 72px; }
 
+    /* Validation error state */
+    .form-group input.error,
+    .form-group textarea.error {
+      border-color: var(--danger) !important;
+      box-shadow: 0 0 0 3px var(--danger-ring) !important;
+      animation: shake 0.35s;
+    }
+
+    .form-error {
+      font-size: 0.75rem;
+      color: var(--danger);
+      margin-top: 0.3rem;
+      display: none;
+    }
+    .form-error.visible { display: block; }
+
     .modal-actions { display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.25rem; }
+
+    /* Confirm modal */
+    .confirm-modal { max-width: 360px; text-align: center; }
+    .confirm-modal .confirm-msg {
+      font-size: 0.9375rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+    .confirm-modal .modal-actions { justify-content: center; }
+
+    /* Toast notifications */
+    #toastContainer {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      pointer-events: none;
+    }
+
+    .toast {
+      padding: 0.625rem 1rem;
+      border-radius: var(--radius);
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-md);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: auto;
+      max-width: 300px;
+    }
+    .toast.visible { opacity: 1; transform: none; }
+    .toast-success { background: var(--success); color: #fff; }
+    .toast-error { background: var(--danger); color: #fff; }
+    .toast-info { background: var(--text); color: var(--surface); }
 
     /* Toolbar */
     .toolbar {
@@ -201,6 +289,7 @@
       font-family: inherit;
       background: var(--surface);
       color: var(--text);
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
 
     .search-box input:focus {
@@ -250,6 +339,7 @@
       background: var(--surface);
       color: var(--text-secondary);
       transition: all 0.15s;
+      min-height: 30px;
     }
 
     .tag-pill:hover { border-color: var(--primary); color: var(--primary); }
@@ -342,6 +432,11 @@
 
     .card-item:hover .card-actions { opacity: 1; }
 
+    /* Always show card actions on touch devices */
+    @media (hover: none) {
+      .card-item .card-actions { opacity: 1; }
+    }
+
     .card-actions button {
       background: none;
       border: none;
@@ -352,6 +447,8 @@
       line-height: 1;
       color: var(--text-muted);
       transition: all 0.15s;
+      min-height: 32px;
+      min-width: 32px;
     }
 
     .card-actions button:hover { background: var(--bg); color: var(--text); }
@@ -419,6 +516,8 @@
       perspective: 1000px;
       cursor: pointer;
       margin-bottom: 1.5rem;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
 
     .flashcard-inner {
@@ -435,6 +534,7 @@
       position: absolute;
       inset: 0;
       backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
       background: var(--surface);
       border-radius: var(--radius-xl);
       box-shadow: var(--shadow-lg);
@@ -459,9 +559,7 @@
     }
 
     .flashcard-front .face-text { font-size: 1.375rem; font-weight: 600; line-height: 1.4; }
-    .flashcard-back {
-      transform: rotateY(180deg);
-    }
+    .flashcard-back { transform: rotateY(180deg); }
     .flashcard-back .face-text { font-size: 1.125rem; color: var(--text-secondary); line-height: 1.5; }
 
     .flashcard-hint {
@@ -471,23 +569,26 @@
       color: var(--text-muted);
     }
 
-    .study-nav {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
-
     .study-confidence {
       display: none;
       gap: 0.75rem;
       align-items: center;
       margin-bottom: 1.5rem;
+      align-self: stretch;
     }
 
     .study-confidence.visible { display: flex; }
+    .study-confidence .btn { flex: 1; padding: 0.625rem 1.25rem; font-size: 0.875rem; }
 
-    .study-confidence .btn { padding: 0.625rem 1.25rem; font-size: 0.875rem; }
+    .study-nav {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+      align-self: stretch;
+    }
+
+    .study-nav .btn { flex: 1; justify-content: center; }
 
     .kbd {
       display: inline-block;
@@ -499,6 +600,10 @@
       color: var(--text-muted);
       margin-left: 0.375rem;
       vertical-align: middle;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .kbd { background: rgba(255,255,255,0.08); }
     }
 
     /* Results screen */
@@ -536,32 +641,127 @@
     .stat-card.know .stat-num { color: var(--success); }
     .stat-card.learning .stat-num { color: var(--warning); }
 
-    .results-actions { display: flex; gap: 0.75rem; justify-content: center; }
+    .results-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
 
     /* Animations */
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%       { transform: translateX(-5px); }
+      40%       { transform: translateX(5px); }
+      60%       { transform: translateX(-5px); }
+      80%       { transform: translateX(5px); }
+    }
 
-    /* Responsive */
+    /* Responsive — tablet */
+    @media (max-width: 768px) {
+      header { padding: 0.75rem 1.25rem; }
+      .container { padding: 1.25rem; }
+    }
+
+    /* Responsive — mobile */
     @media (max-width: 600px) {
-      header { padding: 0.75rem 1rem; }
+      header { padding: 0.625rem 1rem; }
+      header h1 { font-size: 1rem; }
+      .logo-title { display: none; }
+
+      /* Show symbol, hide text label for import/export */
+      .header-actions .btn-ghost.btn-sm .btn-label { display: none; }
+      .header-actions .btn-ghost.btn-sm .btn-icon-sym { display: inline; font-size: 1rem; }
+      .header-actions { gap: 0.25rem; }
+      .header-actions .btn-ghost.btn-sm { padding: 0.375rem 0.5rem; min-width: 36px; }
+
       .container { padding: 1rem; }
       .card-grid { grid-template-columns: 1fr; }
-      .study-container { padding: 1rem; }
-      .flashcard { height: 280px; }
+
+      .study-container { padding: 1rem 1rem 1.5rem; }
+      .flashcard { height: 260px; }
+      .flashcard-face { padding: 2rem 1.5rem; }
       .flashcard-front .face-text { font-size: 1.125rem; }
-      .toolbar { flex-direction: column; }
+      .flashcard-back .face-text { font-size: 1rem; }
+
+      .study-confidence .btn { padding: 0.75rem 0.5rem; font-size: 0.8125rem; }
+
+      /* Modals as bottom sheets on mobile */
+      .modal-overlay { align-items: flex-end; padding: 0; }
+      .modal {
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        max-width: 100%;
+        width: 100%;
+        padding: 1.5rem 1.25rem 2rem;
+        animation: slideSheet 0.25s;
+      }
+
+      .results-container { padding: 2rem 1rem; }
+      .results-actions { flex-direction: column; align-items: stretch; }
+      .results-actions .btn { width: 100%; }
+
+      #toastContainer { left: 1rem; right: 1rem; bottom: 1rem; }
+      .toast { max-width: 100%; }
+
+      .toolbar { flex-direction: column; gap: 0.5rem; }
       .search-box { min-width: unset; width: 100%; }
+    }
+
+    @keyframes slideSheet {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    /* Sample sets picker */
+    .sets-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.625rem;
+      margin-bottom: 1.25rem;
+      max-height: 55vh;
+      overflow-y: auto;
+    }
+
+    .set-item {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+      padding: 0.875rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg);
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .set-item:hover { border-color: var(--primary); background: var(--primary-bg); }
+
+    .set-icon { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
+
+    .set-info { flex: 1; min-width: 0; }
+
+    .set-name { font-weight: 600; font-size: 0.9375rem; margin-bottom: 0.125rem; }
+
+    .set-meta { font-size: 0.75rem; color: var(--text-muted); }
+
+    /* Very small screens */
+    @media (max-width: 380px) {
+      .flashcard { height: 240px; }
+      .study-nav .kbd { display: none; }
+      .study-confidence .kbd { display: none; }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1><span class="logo">F</span> Flashcards</h1>
+  <h1><span class="logo">F</span> <span class="logo-title">Flashcards</span></h1>
   <div class="header-actions">
-    <button class="btn btn-ghost btn-sm" id="importBtn" title="Import cards">Import</button>
-    <button class="btn btn-ghost btn-sm" id="exportBtn" title="Export cards" disabled>Export</button>
+    <button class="btn btn-ghost btn-sm" id="importBtn" title="Import cards">
+      <span class="btn-label">Import</span><span class="btn-icon-sym">&#8593;</span>
+    </button>
+    <button class="btn btn-ghost btn-sm" id="exportBtn" title="Export cards" disabled>
+      <span class="btn-label">Export</span><span class="btn-icon-sym">&#8595;</span>
+    </button>
+    <button class="btn btn-ghost btn-sm" id="setsBtn" title="Sample card sets">
+      <span class="btn-label">Sets</span><span class="btn-icon-sym">&#8862;</span>
+    </button>
     <button class="btn btn-ghost" id="studyBtn" disabled>Study</button>
     <button class="btn btn-primary" id="addBtn">+ New Card</button>
   </div>
@@ -588,8 +788,11 @@
       <div class="empty-state" id="emptyState">
         <div class="empty-icon">&#x1F4DA;</div>
         <p>No flashcards yet</p>
-        <p class="empty-sub">Create your first card to start studying</p>
-        <button class="btn btn-primary" id="addBtnEmpty">+ New Card</button>
+        <p class="empty-sub">Create your first card, or load a sample set to get started</p>
+        <div style="display:flex; gap:0.75rem; justify-content:center; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="addBtnEmpty">+ New Card</button>
+          <button class="btn btn-outline" id="sampleSetsBtn">Load Sample Set</button>
+        </div>
       </div>
 
       <div class="empty-state" id="noResults" style="display:none">
@@ -622,7 +825,7 @@
         <div class="flashcard-face flashcard-front">
           <span class="face-label">Question</span>
           <div class="face-text" id="studyFront"></div>
-          <div class="flashcard-hint">Click or press Space to flip</div>
+          <div class="flashcard-hint">Tap to flip</div>
         </div>
         <div class="flashcard-face flashcard-back">
           <span class="face-label">Answer</span>
@@ -675,10 +878,12 @@
     <div class="form-group">
       <label for="frontInput">Front (Question)</label>
       <textarea id="frontInput" placeholder="Enter the question or term..."></textarea>
+      <div class="form-error" id="frontError">Please enter a question or term.</div>
     </div>
     <div class="form-group">
       <label for="backInput">Back (Answer)</label>
       <textarea id="backInput" placeholder="Enter the answer or definition..."></textarea>
+      <div class="form-error" id="backError">Please enter an answer or definition.</div>
     </div>
     <div class="form-group">
       <label for="tagInput">Tag (optional)</label>
@@ -706,12 +911,140 @@
   </div>
 </div>
 
+<!-- Confirm Modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal confirm-modal">
+    <p class="confirm-msg" id="confirmMessage"></p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="confirmCancelBtn">Cancel</button>
+      <button class="btn btn-danger" id="confirmOkBtn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sample Sets Modal -->
+<div class="modal-overlay" id="setsModal">
+  <div class="modal" style="max-width:480px">
+    <h2>Sample Sets</h2>
+    <div class="sets-list" id="setsList"></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" id="setsCloseBtn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toastContainer"></div>
+
 <script>
   const STORAGE_KEY = 'flashcards_v2';
 
+  const SAMPLE_SETS = [
+    {
+      name: 'Fun Facts',
+      emoji: '&#x1F388;',
+      description: '15 surprising facts about science & nature',
+      tag: 'Fun Facts',
+      file: 'sets/fun-facts.json',
+      cards: [
+        { front: "What percentage of the human body is water?", back: "About 60% — the brain and heart are closer to 73% water.", tag: "Fun Facts" },
+        { front: "How many hearts does an octopus have?", back: "Three — two pump blood to the gills, one to the rest of the body.", tag: "Fun Facts" },
+        { front: "What is the longest river in the world?", back: "The Nile at 6,650 km (4,130 miles), though some argue the Amazon is longer depending on the source.", tag: "Fun Facts" },
+        { front: "How fast does light travel in a vacuum?", back: "299,792 km/s (about 186,282 miles per second).", tag: "Fun Facts" },
+        { front: "What is the smallest country in the world by area?", back: "Vatican City, at just 0.44 km² (110 acres).", tag: "Fun Facts" },
+        { front: "How many bones does an adult human have?", back: "206. Babies are born with around 270 — many fuse together as we grow.", tag: "Fun Facts" },
+        { front: "What is the hardest natural substance on Earth?", back: "Diamond (score 10 on the Mohs hardness scale).", tag: "Fun Facts" },
+        { front: "Which planet has the most moons?", back: "Saturn, with 146 confirmed moons as of 2024.", tag: "Fun Facts" },
+        { front: "What is a group of flamingos called?", back: "A flamboyance. (A group of crows is called a murder.)", tag: "Fun Facts" },
+        { front: "How long does it take sunlight to reach Earth?", back: "About 8 minutes and 20 seconds, travelling 150 million km.", tag: "Fun Facts" },
+        { front: "What is the most abundant gas in Earth's atmosphere?", back: "Nitrogen, at about 78%. Oxygen makes up about 21%.", tag: "Fun Facts" },
+        { front: "How many colours are in a rainbow?", back: "7 — red, orange, yellow, green, blue, indigo, violet (ROY G BIV).", tag: "Fun Facts" },
+        { front: "What is the largest organ in the human body?", back: "The skin. In an adult it covers about 1.7–2 m² and weighs 3–4 kg.", tag: "Fun Facts" },
+        { front: "At what temperature does water boil at sea level?", back: "100°C (212°F). Higher altitude means lower pressure, so water boils at a lower temperature.", tag: "Fun Facts" },
+        { front: "Which animal has the highest blood pressure?", back: "The giraffe — its heart must pump blood up a very long neck, reaching ~280/180 mmHg.", tag: "Fun Facts" }
+      ]
+    },
+    {
+      name: 'Advanced Vocabulary',
+      emoji: '&#x1F4D6;',
+      description: '15 GRE-level English words with usage examples',
+      tag: 'Vocab',
+      file: 'sets/advanced-vocab.json',
+      cards: [
+        { front: "Ephemeral", back: "Lasting for a very short time; transitory. \"The ephemeral beauty of cherry blossoms lasts only a week.\"", tag: "Vocab" },
+        { front: "Sycophant", back: "A person who flatters someone influential in hopes of personal gain. (Adj: sycophantic)", tag: "Vocab" },
+        { front: "Perspicacious", back: "Having a ready insight into things; shrewd. \"A perspicacious investor spots trends before the crowd.\"", tag: "Vocab" },
+        { front: "Obstreperous", back: "Noisy and difficult to control; unruly. \"The obstreperous crowd drowned out the speaker.\"", tag: "Vocab" },
+        { front: "Loquacious", back: "Tending to talk a great deal; talkative. Antonym: laconic.", tag: "Vocab" },
+        { front: "Mellifluous", back: "Sweet or musical; pleasant to hear. \"Her mellifluous voice could calm any room.\"", tag: "Vocab" },
+        { front: "Perfidious", back: "Deceitful and untrustworthy; guilty of betrayal. (Noun: perfidy)", tag: "Vocab" },
+        { front: "Recalcitrant", back: "Stubbornly resistant to authority or control. \"The recalcitrant student refused every instruction.\"", tag: "Vocab" },
+        { front: "Obfuscate", back: "To make unclear or unintelligible; to confuse deliberately. \"The report was designed to obfuscate rather than inform.\"", tag: "Vocab" },
+        { front: "Sanguine", back: "Optimistic, especially in a difficult situation. \"She remained sanguine despite the setbacks.\" (Not to be confused with sanguinary = bloody.)", tag: "Vocab" },
+        { front: "Truculent", back: "Eager or quick to argue or fight; aggressively defiant. \"The truculent defendant glared at the jury.\"", tag: "Vocab" },
+        { front: "Laconic", back: "Using very few words. From Laconia (Sparta), whose citizens were famed for terse speech. Antonym: loquacious.", tag: "Vocab" },
+        { front: "Cogent", back: "Clear, logical, and convincing. \"She made a cogent argument that swayed the entire committee.\"", tag: "Vocab" },
+        { front: "Equivocate", back: "To use ambiguous language to conceal the truth or avoid commitment. \"The politician equivocated when asked a direct question.\"", tag: "Vocab" },
+        { front: "Inveterate", back: "Having a habit or interest long-established and unlikely to change. \"An inveterate traveller, she had visited over 80 countries.\"", tag: "Vocab" }
+      ]
+    },
+    {
+      name: 'World Capitals',
+      emoji: '&#x1F30D;',
+      description: '20 capital cities — including the tricky ones',
+      tag: 'Geography',
+      file: 'sets/world-capitals.json',
+      cards: [
+        { front: "What is the capital of France?", back: "Paris", tag: "Geography" },
+        { front: "What is the capital of Japan?", back: "Tokyo", tag: "Geography" },
+        { front: "What is the capital of Brazil?", back: "Brasília (not São Paulo or Rio de Janeiro)", tag: "Geography" },
+        { front: "What is the capital of Australia?", back: "Canberra (not Sydney)", tag: "Geography" },
+        { front: "What is the capital of Canada?", back: "Ottawa (not Toronto or Vancouver)", tag: "Geography" },
+        { front: "What is the capital of Egypt?", back: "Cairo", tag: "Geography" },
+        { front: "What is the capital of Argentina?", back: "Buenos Aires", tag: "Geography" },
+        { front: "What is the capital of South Korea?", back: "Seoul", tag: "Geography" },
+        { front: "What is the capital of Russia?", back: "Moscow", tag: "Geography" },
+        { front: "What is the capital of India?", back: "New Delhi (part of the National Capital Territory of Delhi)", tag: "Geography" },
+        { front: "What is the capital of China?", back: "Beijing", tag: "Geography" },
+        { front: "What is the capital of Nigeria?", back: "Abuja (moved from Lagos in 1991)", tag: "Geography" },
+        { front: "What is the capital of Germany?", back: "Berlin", tag: "Geography" },
+        { front: "What is the capital of Mexico?", back: "Mexico City", tag: "Geography" },
+        { front: "What is the capital of Kenya?", back: "Nairobi", tag: "Geography" },
+        { front: "What is the capital of Norway?", back: "Oslo", tag: "Geography" },
+        { front: "What is the capital of New Zealand?", back: "Wellington (not Auckland)", tag: "Geography" },
+        { front: "What is the capital of Turkey?", back: "Ankara (not Istanbul)", tag: "Geography" },
+        { front: "What is the capital of South Africa?", back: "Three capitals: Pretoria (executive), Cape Town (legislative), Bloemfontein (judicial)", tag: "Geography" },
+        { front: "What is the capital of Thailand?", back: "Bangkok (official ceremonial name: Krung Thep Maha Nakhon)", tag: "Geography" }
+      ]
+    },
+    {
+      name: 'Space & Astronomy',
+      emoji: '&#x1F52D;',
+      description: '15 facts about our solar system and beyond',
+      tag: 'Space',
+      file: 'sets/space-astronomy.json',
+      cards: [
+        { front: "What is the closest star to Earth besides the Sun?", back: "Proxima Centauri, about 4.24 light-years away.", tag: "Space" },
+        { front: "How old is the universe?", back: "About 13.8 billion years, based on measurements of the cosmic microwave background.", tag: "Space" },
+        { front: "What is a light-year?", back: "The distance light travels in one year: about 9.46 trillion km (5.88 trillion miles).", tag: "Space" },
+        { front: "What is the largest planet in our solar system?", back: "Jupiter. Its Great Red Spot storm alone is larger than Earth.", tag: "Space" },
+        { front: "What causes a solar eclipse?", back: "The Moon passes between Earth and the Sun, blocking sunlight from reaching parts of Earth's surface.", tag: "Space" },
+        { front: "What is the name of the galaxy we live in?", back: "The Milky Way. It contains an estimated 100–400 billion stars.", tag: "Space" },
+        { front: "What is a black hole?", back: "A region of spacetime where gravity is so strong that nothing — not even light — can escape past the event horizon.", tag: "Space" },
+        { front: "What is the Great Red Spot on Jupiter?", back: "A giant anticyclonic storm that has persisted for at least 350 years. It is slowly shrinking.", tag: "Space" },
+        { front: "How many planets are in our solar system?", back: "8: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune. (Pluto was reclassified as a dwarf planet in 2006.)", tag: "Space" },
+        { front: "What is the Sun primarily made of?", back: "About 73% hydrogen and 25% helium. Nuclear fusion converts hydrogen into helium, releasing enormous energy.", tag: "Space" },
+        { front: "What is the smallest planet in our solar system?", back: "Mercury, with a radius of about 2,440 km.", tag: "Space" },
+        { front: "How long does it take Earth to orbit the Sun?", back: "365.25 days — that extra quarter day is why we have a leap year every four years.", tag: "Space" },
+        { front: "What is a supernova?", back: "An extremely powerful explosion marking the death of a massive star. It can briefly outshine an entire galaxy.", tag: "Space" },
+        { front: "What is the International Space Station (ISS)?", back: "A habitable satellite in low Earth orbit (~400 km up), continuously crewed since November 2000.", tag: "Space" },
+        { front: "What is dark matter?", back: "An undetected form of matter making up ~27% of the universe. It does not interact with light but exerts gravitational effects.", tag: "Space" }
+      ]
+    }
+  ];
+
   function loadCards() {
     try {
-      // Migrate from v1 if needed
       const v1 = localStorage.getItem('flashcards');
       const v2 = localStorage.getItem(STORAGE_KEY);
       if (!v2 && v1) {
@@ -732,13 +1065,13 @@
 
   let cards = loadCards();
   let editingId = null;
-  let studyOrder = [];
+  let studyOrder = [];        // array of card IDs
   let studyIndex = 0;
-  let studyResults = { know: 0, learning: 0, missed: [] };
+  let studyRatings = new Map(); // cardId -> 'know' | 'learning'
+  let missedCardIds = [];
   let searchQuery = '';
   let activeTag = '';
 
-  // DOM refs
   const $ = id => document.getElementById(id);
   const modal = $('modal');
   const frontInput = $('frontInput');
@@ -765,6 +1098,46 @@
   const studyConfidence = $('studyConfidence');
   const progressFill = $('progressFill');
 
+  // ── Toast ──────────────────────────────────────────────────────
+  function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.textContent = message;
+    $('toastContainer').appendChild(toast);
+    requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('visible')));
+    setTimeout(() => {
+      toast.classList.remove('visible');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  // ── Confirm modal ──────────────────────────────────────────────
+  let _confirmCb = null;
+
+  function showConfirm(message, label, onConfirm) {
+    $('confirmMessage').textContent = message;
+    $('confirmOkBtn').textContent = label;
+    _confirmCb = onConfirm;
+    $('confirmModal').classList.add('active');
+  }
+
+  $('confirmOkBtn').addEventListener('click', () => {
+    $('confirmModal').classList.remove('active');
+    if (_confirmCb) { _confirmCb(); _confirmCb = null; }
+  });
+
+  $('confirmCancelBtn').addEventListener('click', () => {
+    $('confirmModal').classList.remove('active');
+    _confirmCb = null;
+  });
+
+  $('confirmModal').addEventListener('click', e => {
+    if (e.target === $('confirmModal')) { $('confirmModal').classList.remove('active'); _confirmCb = null; }
+  });
+
+  // ── Helpers ────────────────────────────────────────────────────
+  function getCardById(id) { return cards.find(c => c.id === id); }
+
   function getAllTags() {
     const tags = new Set();
     cards.forEach(c => { if (c.tag) tags.add(c.tag); });
@@ -773,14 +1146,15 @@
 
   function getFilteredCards() {
     return cards.filter(c => {
-      const matchesSearch = !searchQuery ||
+      const matchSearch = !searchQuery ||
         c.front.toLowerCase().includes(searchQuery) ||
         c.back.toLowerCase().includes(searchQuery);
-      const matchesTag = !activeTag || c.tag === activeTag;
-      return matchesSearch && matchesTag;
+      const matchTag = !activeTag || c.tag === activeTag;
+      return matchSearch && matchTag;
     });
   }
 
+  // ── Render ─────────────────────────────────────────────────────
   function render() {
     const count = cards.length;
     const filtered = getFilteredCards();
@@ -791,55 +1165,87 @@
     studyBtn.disabled = count === 0;
     exportBtn.disabled = count === 0;
     toolbar.style.display = count > 0 ? 'flex' : 'none';
-
     noResults.style.display = count > 0 && filtered.length === 0 ? 'block' : 'none';
 
-    // Render tag filters
-    const tags = getAllTags();
     const tagFilter = $('tagFilter');
     tagFilter.innerHTML = '';
+    const tags = getAllTags();
     if (tags.length > 0) {
       const allPill = document.createElement('button');
       allPill.className = `tag-pill${!activeTag ? ' active' : ''}`;
       allPill.textContent = 'All';
-      allPill.onclick = () => { activeTag = ''; render(); };
+      allPill.addEventListener('click', () => { activeTag = ''; render(); });
       tagFilter.appendChild(allPill);
-
       tags.forEach(tag => {
         const pill = document.createElement('button');
         pill.className = `tag-pill${activeTag === tag ? ' active' : ''}`;
         pill.textContent = tag;
-        pill.onclick = () => { activeTag = activeTag === tag ? '' : tag; render(); };
+        pill.addEventListener('click', () => { activeTag = activeTag === tag ? '' : tag; render(); });
         tagFilter.appendChild(pill);
       });
     }
 
-    // Render cards
+    // Build card grid with DOM construction (no inline onclick, no innerHTML injection)
     cardGrid.innerHTML = '';
     filtered.forEach(card => {
       const el = document.createElement('div');
       el.className = 'card-item';
-      el.innerHTML = `
-        <div class="card-actions">
-          <button onclick="event.stopPropagation(); editCard('${card.id}')" title="Edit">&#9998;</button>
-          <button onclick="event.stopPropagation(); deleteCard('${card.id}')" title="Delete">&#10005;</button>
-        </div>
-        ${card.tag ? `<span class="card-tag">${escapeHtml(card.tag)}</span>` : ''}
-        <div class="card-front">${escapeHtml(card.front)}</div>
-        <div class="card-back">${escapeHtml(card.back)}</div>
-      `;
+
+      const actions = document.createElement('div');
+      actions.className = 'card-actions';
+
+      const editBtn = document.createElement('button');
+      editBtn.innerHTML = '&#9998;';
+      editBtn.title = 'Edit';
+      editBtn.addEventListener('click', e => { e.stopPropagation(); openModal(card); });
+
+      const delBtn = document.createElement('button');
+      delBtn.innerHTML = '&#10005;';
+      delBtn.title = 'Delete';
+      delBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        showConfirm('Delete this flashcard?', 'Delete', () => {
+          cards = cards.filter(c => c.id !== card.id);
+          saveCards(cards);
+          render();
+        });
+      });
+
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+      el.appendChild(actions);
+
+      if (card.tag) {
+        const tagEl = document.createElement('span');
+        tagEl.className = 'card-tag';
+        tagEl.textContent = card.tag;
+        el.appendChild(tagEl);
+      }
+
+      const frontEl = document.createElement('div');
+      frontEl.className = 'card-front';
+      frontEl.textContent = card.front;
+      el.appendChild(frontEl);
+
+      const backEl = document.createElement('div');
+      backEl.className = 'card-back';
+      backEl.textContent = card.back;
+      el.appendChild(backEl);
+
       cardGrid.appendChild(el);
     });
   }
 
-  function escapeHtml(str) {
-    const d = document.createElement('div');
-    d.textContent = str;
-    return d.innerHTML;
+  // ── Modal ──────────────────────────────────────────────────────
+  function clearErrors() {
+    frontInput.classList.remove('error');
+    backInput.classList.remove('error');
+    $('frontError').classList.remove('visible');
+    $('backError').classList.remove('visible');
   }
 
-  // Modal
   function openModal(card) {
+    clearErrors();
     if (card) {
       editingId = card.id;
       modalTitle.textContent = 'Edit Flashcard';
@@ -854,19 +1260,32 @@
       tagInput.value = activeTag || '';
     }
     modal.classList.add('active');
-    frontInput.focus();
+    setTimeout(() => frontInput.focus(), 50);
   }
 
   function closeModal() {
     modal.classList.remove('active');
     editingId = null;
+    clearErrors();
   }
 
   function saveCard() {
     const front = frontInput.value.trim();
     const back = backInput.value.trim();
     const tag = tagInput.value.trim();
-    if (!front || !back) return;
+
+    let valid = true;
+    if (!front) {
+      frontInput.classList.add('error');
+      $('frontError').classList.add('visible');
+      valid = false;
+    }
+    if (!back) {
+      backInput.classList.add('error');
+      $('backError').classList.add('visible');
+      valid = false;
+    }
+    if (!valid) { if (!front) frontInput.focus(); else backInput.focus(); return; }
 
     if (editingId) {
       const card = cards.find(c => c.id === editingId);
@@ -880,29 +1299,26 @@
     render();
   }
 
-  window.editCard = function(id) {
-    const card = cards.find(c => c.id === id);
-    if (card) openModal(card);
-  };
+  frontInput.addEventListener('input', () => {
+    frontInput.classList.remove('error');
+    $('frontError').classList.remove('visible');
+  });
+  backInput.addEventListener('input', () => {
+    backInput.classList.remove('error');
+    $('backError').classList.remove('visible');
+  });
 
-  window.deleteCard = function(id) {
-    if (!confirm('Delete this flashcard?')) return;
-    cards = cards.filter(c => c.id !== id);
-    saveCards(cards);
-    render();
-  };
-
-  // Study mode
+  // ── Study mode ─────────────────────────────────────────────────
   function enterStudy(subset) {
     const pool = subset || getFilteredCards();
     if (pool.length === 0) return;
 
-    studyOrder = pool.map(c => cards.indexOf(c));
+    studyOrder = pool.map(c => c.id);
     studyIndex = 0;
-    studyResults = { know: 0, learning: 0, missed: [] };
+    studyRatings = new Map();
+    missedCardIds = [];
     flashcard.classList.remove('flipped');
     studyConfidence.classList.remove('visible');
-
     showView('study');
     renderStudyCard();
   }
@@ -914,30 +1330,39 @@
   }
 
   function renderStudyCard() {
-    const card = cards[studyOrder[studyIndex]];
+    const card = getCardById(studyOrder[studyIndex]);
+    if (!card) return;
+
     studyFront.textContent = card.front;
     studyBack.textContent = card.back;
     studyTag.textContent = card.tag || '';
     studyTag.style.display = card.tag ? 'inline-block' : 'none';
     flashcard.classList.remove('flipped');
     studyConfidence.classList.remove('visible');
+
+    const rated = studyRatings.size;
     studyCounter.textContent = `${studyIndex + 1} / ${studyOrder.length}`;
-    studyScore.textContent = studyResults.know + studyResults.learning > 0
-      ? `${studyResults.know} known`
-      : '';
-    progressFill.style.width = `${((studyIndex + 1) / studyOrder.length) * 100}%`;
+    studyScore.textContent = rated > 0 ? `${rated} rated` : '';
+    progressFill.style.width = `${(rated / studyOrder.length) * 100}%`;
   }
 
   function rateCard(known) {
-    if (known) {
-      studyResults.know++;
-    } else {
-      studyResults.learning++;
-      studyResults.missed.push(studyOrder[studyIndex]);
+    const cardId = studyOrder[studyIndex];
+    studyRatings.set(cardId, known ? 'know' : 'learning');
+
+    // Advance to next unrated card (forward first, then wrap)
+    let next = -1;
+    for (let i = studyIndex + 1; i < studyOrder.length; i++) {
+      if (!studyRatings.has(studyOrder[i])) { next = i; break; }
+    }
+    if (next === -1) {
+      for (let i = 0; i < studyIndex; i++) {
+        if (!studyRatings.has(studyOrder[i])) { next = i; break; }
+      }
     }
 
-    if (studyIndex < studyOrder.length - 1) {
-      studyIndex++;
+    if (next !== -1) {
+      studyIndex = next;
       renderStudyCard();
     } else {
       showResults();
@@ -945,20 +1370,28 @@
   }
 
   function showResults() {
-    const total = studyResults.know + studyResults.learning;
-    const pct = Math.round((studyResults.know / total) * 100);
-    $('resKnow').textContent = studyResults.know;
-    $('resLearning').textContent = studyResults.learning;
+    let know = 0, learning = 0;
+    missedCardIds = [];
+    studyOrder.forEach(id => {
+      // Unrated cards (navigated past without rating) count as still learning
+      const rating = studyRatings.get(id) || 'learning';
+      if (rating === 'know') { know++; }
+      else { learning++; missedCardIds.push(id); }
+    });
 
-    let sub = '';
+    const total = studyOrder.length;
+    const pct = total > 0 ? Math.round((know / total) * 100) : 0;
+    $('resKnow').textContent = know;
+    $('resLearning').textContent = learning;
+
+    let sub;
     if (pct === 100) sub = 'Perfect score! You know all the cards.';
     else if (pct >= 80) sub = 'Great job! Almost there.';
     else if (pct >= 50) sub = 'Good progress. Keep practicing!';
-    else sub = 'Keep going, you\'ll get there!';
+    else sub = "Keep going, you'll get there!";
     $('resultsSub').textContent = sub;
 
-    $('resRetryMissed').style.display = studyResults.missed.length > 0 ? 'inline-flex' : 'none';
-
+    $('resRetryMissed').style.display = missedCardIds.length > 0 ? 'inline-flex' : 'none';
     showView('results');
   }
 
@@ -970,10 +1403,9 @@
     return arr;
   }
 
-  // Import / Export
+  // ── Import / Export ────────────────────────────────────────────
   function exportCards() {
-    const data = JSON.stringify(cards, null, 2);
-    const blob = new Blob([data], { type: 'application/json' });
+    const blob = new Blob([JSON.stringify(cards, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -985,7 +1417,7 @@
   function openImportModal() {
     $('importText').value = '';
     $('importModal').classList.add('active');
-    $('importText').focus();
+    setTimeout(() => $('importText').focus(), 50);
   }
 
   function doImport() {
@@ -993,7 +1425,6 @@
     if (!text) return;
 
     let imported = [];
-
     try {
       const parsed = JSON.parse(text);
       if (Array.isArray(parsed)) {
@@ -1002,19 +1433,19 @@
           .map(c => ({ id: crypto.randomUUID(), front: String(c.front), back: String(c.back), tag: String(c.tag || '') }));
       }
     } catch {
-      // Try line-by-line: front | back | tag
-      const lines = text.split('\n').filter(l => l.trim());
-      imported = lines.map(line => {
-        const parts = line.split('|').map(s => s.trim());
-        if (parts.length >= 2) {
-          return { id: crypto.randomUUID(), front: parts[0], back: parts[1], tag: parts[2] || '' };
-        }
-        return null;
-      }).filter(Boolean);
+      imported = text.split('\n')
+        .filter(l => l.trim())
+        .map(line => {
+          const parts = line.split('|').map(s => s.trim());
+          if (parts.length >= 2 && parts[0] && parts[1])
+            return { id: crypto.randomUUID(), front: parts[0], back: parts[1], tag: parts[2] || '' };
+          return null;
+        })
+        .filter(Boolean);
     }
 
     if (imported.length === 0) {
-      alert('No valid cards found. Use JSON or "front | back | tag" format.');
+      showToast('No valid cards found. Use JSON or "front | back | tag" format.', 'error');
       return;
     }
 
@@ -1022,10 +1453,10 @@
     saveCards(cards);
     $('importModal').classList.remove('active');
     render();
-    alert(`Imported ${imported.length} card${imported.length !== 1 ? 's' : ''}.`);
+    showToast(`Imported ${imported.length} card${imported.length !== 1 ? 's' : ''}.`);
   }
 
-  // Event listeners
+  // ── Event listeners ────────────────────────────────────────────
   $('addBtn').addEventListener('click', () => openModal());
   $('addBtnEmpty').addEventListener('click', () => openModal());
   $('cancelBtn').addEventListener('click', closeModal);
@@ -1035,9 +1466,7 @@
 
   flashcard.addEventListener('click', () => {
     flashcard.classList.toggle('flipped');
-    if (flashcard.classList.contains('flipped')) {
-      studyConfidence.classList.add('visible');
-    }
+    if (flashcard.classList.contains('flipped')) studyConfidence.classList.add('visible');
   });
 
   $('knowItBtn').addEventListener('click', () => rateCard(true));
@@ -1054,51 +1483,107 @@
   $('shuffleBtn').addEventListener('click', () => {
     shuffleArray(studyOrder);
     studyIndex = 0;
-    studyResults = { know: 0, learning: 0, missed: [] };
+    studyRatings = new Map();
+    missedCardIds = [];
     renderStudyCard();
   });
 
   clearAllBtn.addEventListener('click', () => {
-    if (!confirm('Delete all flashcards? This cannot be undone.')) return;
-    cards = [];
-    saveCards(cards);
-    activeTag = '';
-    searchQuery = '';
-    $('searchInput').value = '';
-    render();
+    showConfirm('Delete all flashcards? This cannot be undone.', 'Delete All', () => {
+      cards = [];
+      saveCards(cards);
+      activeTag = '';
+      searchQuery = '';
+      $('searchInput').value = '';
+      render();
+    });
   });
 
-  $('searchInput').addEventListener('input', (e) => {
+  $('searchInput').addEventListener('input', e => {
     searchQuery = e.target.value.toLowerCase();
     render();
   });
+
+  // ── Sample sets ────────────────────────────────────────────────
+  function openSetsModal() {
+    const list = $('setsList');
+    list.innerHTML = '';
+    SAMPLE_SETS.forEach(set => {
+      const item = document.createElement('div');
+      item.className = 'set-item';
+
+      const icon = document.createElement('span');
+      icon.className = 'set-icon';
+      icon.innerHTML = set.emoji;
+
+      const info = document.createElement('div');
+      info.className = 'set-info';
+
+      const name = document.createElement('div');
+      name.className = 'set-name';
+      name.textContent = set.name;
+
+      const meta = document.createElement('div');
+      meta.className = 'set-meta';
+      meta.textContent = `${set.cards.length} cards · ${set.tag}  —  ${set.description}`;
+
+      info.appendChild(name);
+      info.appendChild(meta);
+
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-primary btn-sm';
+      btn.textContent = 'Load';
+      btn.style.flexShrink = '0';
+      btn.addEventListener('click', () => loadSet(set));
+
+      item.appendChild(icon);
+      item.appendChild(info);
+      item.appendChild(btn);
+      list.appendChild(item);
+    });
+    $('setsModal').classList.add('active');
+  }
+
+  function loadSet(set) {
+    cards = set.cards.map(c => ({ id: crypto.randomUUID(), ...c }));
+    saveCards(cards);
+    searchQuery = '';
+    activeTag = '';
+    $('searchInput').value = '';
+    $('setsModal').classList.remove('active');
+    render();
+    enterStudy();
+  }
+
+  $('setsBtn').addEventListener('click', openSetsModal);
+  $('sampleSetsBtn').addEventListener('click', openSetsModal);
+  $('setsCloseBtn').addEventListener('click', () => $('setsModal').classList.remove('active'));
+  $('setsModal').addEventListener('click', e => { if (e.target === $('setsModal')) $('setsModal').classList.remove('active'); });
 
   $('importBtn').addEventListener('click', openImportModal);
   exportBtn.addEventListener('click', exportCards);
   $('importCancelBtn').addEventListener('click', () => $('importModal').classList.remove('active'));
   $('importConfirmBtn').addEventListener('click', doImport);
 
-  // Results actions
   $('resToDeck').addEventListener('click', () => showView('deck'));
   $('resRetry').addEventListener('click', () => enterStudy());
   $('resRetryMissed').addEventListener('click', () => {
-    const missedCards = studyResults.missed.map(i => cards[i]).filter(Boolean);
-    if (missedCards.length > 0) enterStudy(missedCards);
+    const missed = missedCardIds.map(id => getCardById(id)).filter(Boolean);
+    if (missed.length > 0) enterStudy(missed);
   });
 
-  // Close modals on overlay click
-  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-  $('importModal').addEventListener('click', (e) => { if (e.target === $('importModal')) $('importModal').classList.remove('active'); });
+  modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+  $('importModal').addEventListener('click', e => { if (e.target === $('importModal')) $('importModal').classList.remove('active'); });
 
-  // Keyboard shortcuts
-  document.addEventListener('keydown', (e) => {
+  document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       if (modal.classList.contains('active')) closeModal();
       else if ($('importModal').classList.contains('active')) $('importModal').classList.remove('active');
+      else if ($('confirmModal').classList.contains('active')) { $('confirmModal').classList.remove('active'); _confirmCb = null; }
+      else if ($('setsModal').classList.contains('active')) $('setsModal').classList.remove('active');
       else if (studyView.classList.contains('active')) showView('deck');
     }
 
-    // Only handle study shortcuts if not in a modal or input
     if (!studyView.classList.contains('active')) return;
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
@@ -1109,18 +1594,15 @@
     }
     if (e.key === 'ArrowLeft' && studyIndex > 0) { studyIndex--; renderStudyCard(); }
     if (e.key === 'ArrowRight' && studyIndex < studyOrder.length - 1) { studyIndex++; renderStudyCard(); }
-
-    // Confidence ratings
     if (flashcard.classList.contains('flipped')) {
       if (e.key === '1') rateCard(false);
       if (e.key === '2') rateCard(true);
     }
   });
 
-  // Enter to save in modals
-  frontInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); backInput.focus(); } });
-  backInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); tagInput.focus(); } });
-  tagInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); saveCard(); } });
+  frontInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); backInput.focus(); } });
+  backInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); tagInput.focus(); } });
+  tagInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); saveCard(); } });
 
   render();
 </script>
